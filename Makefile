@@ -19,7 +19,8 @@ NVCCFLAGS = -O3 -DENABLE_TIMING --use_fast_math
 # Add targets for your other implementations here
 TARGETS = \
 	fotowinkel-base	\
-	fotowinkel-cuda
+	fotowinkel-MAP \
+	fotowinkel-cuda 
 
 COMMON_SRC = main.c image.c timing.c
 
@@ -32,6 +33,9 @@ fotowinkel-base:	main.c $(COMMON_SRC) filters-base.c pipeline.c
 # include "run-filters" in filters-cuda.cu.
 fotowinkel-cuda:	main.c $(COMMON_SRC) filters-cuda.cu
 			$(NVCC) $(NVCCFLAGS) -o $@ $^ $(PNGFLAGS) $(LDFLAGS)
+			
+fotowinkel-MAP:	main.c $(COMMON_SRC) filters-MAP.c pipeline.c
+			$(CC) $(CFLAGS) -o $@ $^ $(PNGFLAGS) $(LDFLAGS)
 
 # Add rules for your other implementations with new filters.c files here.
 
