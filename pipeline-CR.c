@@ -17,57 +17,62 @@
  *   of the image.
  */
 
-void
-run_filters(image_t *result, const image_t *image, const int n_repeat)
-{
-  /* Important: get_time() requests "CPU time" which includes
-   * the CPU time consumed by all threads in the process. So for
-   * a multi-threaded code this might not give the timing information
-   * you want. You can change get_time() in timing.h to use for example
-   * CLOCK_REALTIME (which is potentially less accurate) instead
-   * of CLOCK_PROCESS_CPUTIME_ID.
-   */
-  struct timespec start_time, end_time;
-  get_time(&start_time);
+void run_filters(image_t *result, const image_t *image, const int n_repeat) {
+	/* Important: get_time() requests "CPU time" which includes
+	 * the CPU time consumed by all threads in the process. So for
+	 * a multi-threaded code this might not give the timing information
+	 * you want. You can change get_time() in timing.h to use for example
+	 * CLOCK_REALTIME (which is potentially less accurate) instead
+	 * of CLOCK_PROCESS_CPUTIME_ID.
+	 */
+	struct timespec start_time, end_time;
+	get_time(&start_time);
 
-  int blockSize = 128;
+	int blockSize = 64;
 
-  /* Determine in which ranges we need to draw the rectangle */
-  const int xx = 0, yy = 0, rect_x = 50, rect_y = 50, rect_height = result->height - 100,
-		  rect_width = result->width - 100;
-  const int start_x = rect_x < xx ? xx : rect_x;
-  const int end_x = rect_x + rect_width < xx + result->width ?
-      rect_x + rect_width : xx + result->width;
+	/* Determine in which ranges we need to draw the rectangle */
+	const int xx = 0, yy = 0, rect_x = 50, rect_y = 50, rect_height =
+			result->height - 100, rect_width = result->width - 100;
+	const int start_x = rect_x < xx ? xx : rect_x;
+	const int end_x =
+			rect_x + rect_width < xx + result->width ?
+					rect_x + rect_width : xx + result->width;
 
-  const int start_y = rect_y < yy ? yy : rect_y;
-  const int end_y = rect_y + rect_height < yy + result->height ?
-      rect_y + rect_height : yy + result->height;
+	const int start_y = rect_y < yy ? yy : rect_y;
+	const int end_y =
+			rect_y + rect_height < yy + result->height ?
+					rect_y + rect_height : yy + result->height;
 
-  for (int Z = 0; Z < n_repeat; Z++)
-    {
-	  for (int x = 0; x < image->height; x++) {
-	      for (int y = 0; y < image->width; y++) {
-				  filters_copy(result, image, y, x, image->width, image->height);
-				  filters_apply_gamma(result, y, x, result->width, result->height);
+	for (int Z = 0; Z < n_repeat; Z++) {
+		for (int x = 0; x < image->width; x += blockSize) {
+			for (int y = 0; y < image->height; y += blockSize) {
+				for (int blockRow = x; blockRow < x + blockSize; blockRow++) {
+					for (int blockCol = y; blockCol < y + blockSize; blockCol++) {
 
-				  filters_brightness(result, y, x, result->width, result->height, 0.8);
+						filters_copy(result, image, blockCol, blockRow, image->width,
+								image->height);
+						filters_apply_gamma(result, blockCol, blockRow, result->width,
+								result->height);
 
-				  filters_selective_grayscale(result,
-											  y, x, result->width, result->height, 40, 30);
+						filters_brightness(result, blockCol, blockRow, result->width,
+								result->height, 0.8);
 
-			      filters_rectangle(result,
-			                        y, x, result->width, result->height,
-									start_x, start_y, end_x, end_y
-			                       );
+						filters_selective_grayscale(result, blockCol, blockRow, result->width,
+								result->height, 40, 30);
 
-			#if 0
-				  /* Voor de liefhebbers. */
-				  filters_gaussian_blur(result, temp2, 3);
-			#endif
-	      }
-	  }
-    }
-  get_time(&end_time);
+						filters_rectangle(result, blockCol, blockRow, result->width,
+								result->height, start_x, start_y, end_x, end_y);
 
-  print_elapsed_time("filters", &end_time, &start_time);
+#if 0
+						/* Voor de liefhebbers. */
+						filters_gaussian_blur(result, temp2, 3);
+#endif
+					}
+				}
+			}
+		}
+	}
+	get_time(&end_time);
+
+	print_elapsed_time("filters", &end_time, &start_time);
 }
