@@ -49,18 +49,18 @@ void run_filters(image_t *result, const image_t *image, const int n_repeat) {
 				for (int blockRow = x; blockRow < x + blockSize; blockRow++) {
 					for (int blockCol = y; blockCol < y + blockSize; blockCol++) {
 
-						filters_copy(result, image, blockCol, blockRow, image->width,
+						filters_copy(result, image, blockRow, blockCol, image->width,
 								image->height);
-						filters_apply_gamma(result, blockCol, blockRow, result->width,
+						filters_apply_gamma(result, blockRow, blockCol, result->width,
 								result->height);
 
-						filters_brightness(result, blockCol, blockRow, result->width,
+						filters_brightness(result, blockRow, blockCol, result->width,
 								result->height, 0.8);
 
-						filters_selective_grayscale(result, blockCol, blockRow, result->width,
+						filters_selective_grayscale(result, blockRow, blockCol, result->width,
 								result->height, 40, 30);
 
-						filters_rectangle(result, blockCol, blockRow, result->width,
+						filters_rectangle(result, blockRow, blockCol, result->width,
 								result->height, start_x, start_y, end_x, end_y);
 
 #if 0
