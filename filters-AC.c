@@ -11,6 +11,10 @@
 #include <stdlib.h>
 #include <assert.h>
 
+static void set_RGBA(rgba_t color, float r, float g, float b, float a) {
+
+}
+
 /* See filters.h for a brief description of these functions. */
 
 void filters_copy(image_t *dst, const image_t *src, const int x, const int y,
