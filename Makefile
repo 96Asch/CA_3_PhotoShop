@@ -21,6 +21,7 @@ TARGETS = \
 	fotowinkel-base	\
 	fotowinkel-MAP \
 	fotowinkel-CR \
+	fotowinkel-AC \
 	fotowinkel-cuda 
 
 COMMON_SRC = main.c image.c timing.c
@@ -39,6 +40,9 @@ fotowinkel-MAP:	main.c $(COMMON_SRC) filters-MAP.c pipeline.c
 			$(CC) $(CFLAGS) -o $@ $^ $(PNGFLAGS) $(LDFLAGS)
 			
 fotowinkel-CR:	main.c $(COMMON_SRC) filters-CR.c pipeline-CR.c
+			$(CC) $(CFLAGS) -o $@ $^ $(PNGFLAGS) $(LDFLAGS)
+
+fotowinkel-AC:	main.c $(COMMON_SRC) filters-AC.c pipeline.c
 			$(CC) $(CFLAGS) -o $@ $^ $(PNGFLAGS) $(LDFLAGS)
 
 # Add rules for your other implementations with new filters.c files here.
