@@ -82,12 +82,12 @@ filters_rectangle(image_t *image,
         {
           rgba_t color, rect_color;
           float color_alpha;
-
+          int index = offset+xx;
           /* Hard-coded blue color for the rectangle. Alpha value of 0.5 */
           RGBA(rect_color, 66/255., 95/255., 244/255., 0.5);
 
           /* Perform ATOP operator. */
-          RGBA_unpack(color, image->data[offset+xx]);
+          RGBA_unpack(color, image->data[index]);
           color_alpha = color.w;
           RGBA_mults(color, color, color_alpha);
           RGBA_mults(rect_color, rect_color, 1.0 - color_alpha);
