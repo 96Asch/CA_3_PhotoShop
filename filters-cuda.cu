@@ -239,7 +239,7 @@ run_filters(image_t *result, const image_t *image, const int n_repeat)
   cudaEventCreate(&stop);
 
   /* Calculate the block size and the number of thread blocks */
-  const dim3 blocksize(16, 16);
+  const dim3 blocksize(32,32);
   const dim3 numblocks((image->width % blocksize.x) ?
                           image->width / blocksize.x + 1 :
                           image->width / blocksize.x,
