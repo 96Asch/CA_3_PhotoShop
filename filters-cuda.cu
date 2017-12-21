@@ -150,8 +150,8 @@ run_filters(image_t *result, const image_t *image, const int n_repeat)
                                                   0, 0,
                                                   image->width,
                                                   image->height);
-      filters_cuda_apply_gamma<<<numblocks, blocksize>>>(result_D, image->rowstride, 0, 0, image->width, image->height);
-      filters_cuda_brightness<<<numblocks, blocksize>>>(result_D, image->rowstride, 0, 0, image->width, image->height,0.8, temp);
+//      filters_cuda_apply_gamma<<<numblocks, blocksize>>>(result_D, image->rowstride, 0, 0, image->width, image->height);
+ //     filters_cuda_brightness<<<numblocks, blocksize>>>(result_D, image->rowstride, 0, 0, image->width, image->height,0.8, temp);
       CUDA_ASSERT( cudaGetLastError() );
 
 
